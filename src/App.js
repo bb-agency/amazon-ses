@@ -1,17 +1,23 @@
-
 import React, { useState } from 'react';
 import './App.css';
-import { sendMail } from "./simpleEmail"
+import { sendHtmlMail ,sendTextMail, createTemplate } from "./simpleEmail"
 
 const App = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   
-  
-  const submitData = async () => {
-    await sendMail(email, name, message);
+  const submitTemplate =  async (e) => {
+    e.preventDefault()
+    await createTemplate()
   }
+  
+  const submitData = async (e) => {
+    e.preventDefault()
+    await sendTextMail(email, name, message);
+    await sendHtmlMail(email, name, message);
+  }
+  
   return (
     <div className="app">
       <h2>Amazon SES</h2>
@@ -40,7 +46,10 @@ const App = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)} />
         </div>
-        <button onClick={() => submitData()}>Submit</button>
+        <div className='app-buttons-wrapper'>
+          <button className='first-btn' onClick={(e) => submitData(e)}>Submit</button>
+          <button onClick={(e) => submitTemplate(e)}>Create template</button>
+        </div>
       </form>
     </div>
   );
